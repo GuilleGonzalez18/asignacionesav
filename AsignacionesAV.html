@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Planilla de Asignaciones</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1em;
+        }
+
+        th,
+        td {
+            border: 1px solid #aaa;
+            padding: 0.5em;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        form {
+            margin-bottom: 1em;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #generarAsignaciones {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        #generarAsignaciones:hover {
+            background-color: #0056b3;
+        }
+
+        #limpiarPersona {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        #limpiarPersona:hover {
+            background-color: #0056b3;
+        }
+
+        #limpiarPersonas {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        #agregarMesSiguiente {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        #agregarMesSiguiente:hover {
+            background-color: #0056b3;
+        }
+
+        #agregarFecha {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        #agregarFecha:hover {
+            background-color: #0056b3;
+        }
+
+        #limpiarPersonas:hover {
+            background-color: #0056b3;
+        }
+
+        #agregarNoDisp {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        #agregarNoDisp:hover {
+            background-color: #0056b3;
+        }
+
+        #limpiarNoDisp {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        #limpiarNoDisp:hover {
+            background-color: #0056b3;
+        }
+
+        #agregarPersona {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        #agregarPersona:hover {
+            background-color: #0056b3;
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .flex-row .card {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        #formularioPersonas {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border: 2px solid black;
+            border-radius: 30px;
+        }
+
+        #formularioNoDisponibilidad {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #formularioPersonas fieldset {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            border: none;
+            padding: 0;
+        }
+
+        #formularioPersonas legend {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        #formularioFechasSemana fieldset {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            border: none;
+            padding: 0;
+            margin: 0;
+            margin-top: auto;
+        }
+
+        #formularioFechasSemana legend {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        #formularioPersonas button {
+            margin-top: auto;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+    </style>
+    <style>
+        #formularioFechasSemana>div:nth-child(2) {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+    </style>
+</head>
+<style>
+    #formularioFechasSemana>div:first-child {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+</style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Planilla de Asignaciones para Eventos</h1>
+
+        <div class="flex-row">
+            <form class="card" id="formularioPersonas">
+                <label for="nombrePersona">Nombre de la Persona:</label>
+                <input type="text" id="nombrePersona" name="nombrePersona" required>
+                <label for="colorPersona">Color:</label>
+                <input type="color" id="colorPersona" name="colorPersona" value="#000000">
+                <label><input type="checkbox" id="selectAllRoles"> Asignar todos los roles</label>
+                <fieldset>
+                    <legend>Roles Permitidos:</legend>
+                    <label><input type="checkbox" name="roles" value="Anfitrión" id="cbxAnfitrion"> Anfitrión</label>
+                    <label><input type="checkbox" name="roles" value="Coanfitrión" id="cbxCoAnfitrion">
+                        Coanfitrión</label>
+                    <label><input type="checkbox" name="roles" value="Micrófono 1" id="cbxMicro1"> Micrófono 1</label>
+                    <label><input type="checkbox" name="roles" value="Micrófono 2" id="cbxMicro2"> Micrófono 2</label>
+                    <label><input type="checkbox" name="roles" value="Plataforma" id="cbxPlataforma"> Plataforma</label>
+                </fieldset>
+                <div class="button-group">
+                    <button type="submit" id="agregarPersona">Agregar Persona</button>
+                    <button type="button" id="limpiarPersonas">Vaciar lista de personas</button>
+                </div>
+                <label for="eliminarpersona">Nombre de la persona:</label>
+                <select id="eliminarPersona" name="eliminarPersona"></select>
+                <button type="button" id="limpiarPersona">Eliminar Persona</button>
+            </form>
+
+            <form class="card" id="formularioNoDisponibilidad">
+                <label for="fechaNoDisponible">Fecha en la que NO está disponible:</label>
+                <input type="date" id="fechaNoDisponible" name="fechaNoDisponible" required>
+                <label for="personaNoDisponible">Nombre de la persona:</label>
+                <select id="personaNoDisponible" name="personaNoDisponible" required></select>
+                <ul id="listaNoDisponibilidades"></ul>
+                <div class="button-group">
+                    <button type="submit" id="agregarNoDisp">Agregar No Disponibilidad</button>
+                    <button type="button" id="limpiarNoDisp">Limpiar No Disponibilidades</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="flex-row">
+            <form class="card" id="formularioFechasSemana">
+                <div>
+                    <label for="fechaEvento">Agregar Fecha del Evento:</label>
+                    <input type="date" id="fechaEvento" name="fechaEvento" required>
+                    <button type="submit" id="agregarFecha">Agregar Fecha</button>
+                </div>
+                <hr>
+                <fieldset>
+                    <legend>Días de la semana</legend>
+                    <label><input type="checkbox" name="diasSemana" value="1"> Lunes</label>
+                    <label><input type="checkbox" name="diasSemana" value="2"> Martes</label>
+                    <label><input type="checkbox" name="diasSemana" value="3"> Miércoles</label>
+                    <label><input type="checkbox" name="diasSemana" value="4"> Jueves</label>
+                    <label><input type="checkbox" name="diasSemana" value="5"> Viernes</label>
+                    <label><input type="checkbox" name="diasSemana" value="6"> Sábado</label>
+                    <label><input type="checkbox" name="diasSemana" value="0"> Domingo</label>
+                    <button type="button" id="agregarMesSiguiente">Agregar mes siguiente</button>
+                </fieldset>
+            </form>
+            <div class="card">
+                <h2>Fechas de Eventos</h2>
+                <ul id="listaFechas"></ul>
+            </div>
+        </div>
+
+        <h2>Asignaciones</h2>
+        <div class="card">
+            <button id="generarAsignaciones">Generar Asignaciones</button>
+            <div id="asignaciones"></div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle all roles when 'selectAllRoles' is changed
+        document.getElementById('selectAllRoles').addEventListener('change', function () {
+            const checked = this.checked;
+            document.querySelectorAll('#formularioPersonas input[name="roles"]').forEach(cb => {
+                cb.checked = checked;
+            });
+        });
+        function uncheckBox() {
+            document.getElementById('selectAllRoles').checked = false;
+            document.querySelectorAll('input[name="roles"]').forEach(cb => {
+                cb.checked = false;
+            });
+        }
+        const personas = JSON.parse(localStorage.getItem('personas') || '{}');
+        const noDisponibilidades = JSON.parse(localStorage.getItem('noDisponibilidades') || '{}');
+        const fechasEventos = [];
+        let assignedThisCycle = new Set();
+        const eliminarPersonaSelect = document.getElementById('eliminarPersona');
+        const personaNoDisponibleSelect = document.getElementById('personaNoDisponible');
+        eliminarPersonaSelect.addEventListener('change', () => {
+            const nombre = eliminarPersonaSelect.value;
+            personaNoDisponibleSelect.value = nombre;
+            actualizarListaNoDisponibilidades(nombre);
+            cargarDatosPersona(nombre); 
+        });
+
+        personaNoDisponibleSelect.addEventListener('change', () => {
+            const nombre = personaNoDisponibleSelect.value;
+            eliminarPersonaSelect.value = nombre;
+            actualizarListaNoDisponibilidades(nombre);
+            cargarDatosPersona(nombre); 
+        });
+
+
+        document.getElementById('formularioPersonas').addEventListener('submit', event => {
+            event.preventDefault();
+            const nombre = event.target.nombrePersona.value.trim();
+            const roles = Array.from(event.target.querySelectorAll('input[name="roles"]:checked'))
+                .map(cb => cb.value);
+            if (!nombre) {
+                alert('Ingresa un nombre válido.');
+                return;
+            }
+            if (personas[nombre]) {
+                if (!confirm(`La persona "${nombre}" ya existe. ¿Deseas sobreescribir sus roles?`)) {
+                    return;
+                }
+            }
+            if (roles.length === 0) {
+                alert('Selecciona al menos un rol.');
+                return;
+            }
+            const color = event.target.colorPersona.value;
+            personas[nombre] = { roles, color };
+            actualizarSelectPersonas();
+            actualizarSelectPersonasAEliminar();
+            localStorage.setItem('personas', JSON.stringify(personas));
+            event.target.nombrePersona.value = '';
+            uncheckBox();
+        });
+
+        function cargarDatosPersona(nombre) {
+            const persona = personas[nombre];
+            if (!persona) return;
+            document.getElementById('nombrePersona').value = nombre;
+            document.getElementById('colorPersona').value = persona.color || '#000000';
+            document.querySelectorAll('input[name="roles"]').forEach(cb => cb.checked = false);
+            persona.roles.forEach(rol => {
+                const checkbox = Array.from(document.querySelectorAll('input[name="roles"]'))
+                    .find(cb => cb.value === rol);
+                if (checkbox) checkbox.checked = true;
+            });
+        }
+
+        function actualizarSelectPersonas() {
+            const select = document.getElementById('personaNoDisponible');
+            select.innerHTML = Object.keys(personas)
+                .sort()
+                .map(nombre => `<option value="${nombre}">${nombre}</option>`)
+                .join('');
+        }
+        function actualizarSelectPersonasAEliminar() {
+            const select = document.getElementById('eliminarPersona');
+            select.innerHTML = Object.keys(personas)
+                .sort()
+                .map(nombre => `<option value="${nombre}">${nombre}</option>`)
+                .join('');
+        }
+
+
+        function actualizarListaNoDisponibilidades(persona) {
+            const ul = document.getElementById('listaNoDisponibilidades');
+            const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+            const fechas = Object.keys(noDisponibilidades)
+                .filter(fecha => noDisponibilidades[fecha].includes(persona));
+            ul.innerHTML = fechas
+                .sort()
+                .map(f => {
+                    const [y, m, d] = f.split('-').map(Number);
+                    const dayName = diasSemana[new Date(y, m - 1, d).getDay()];
+                    return `<li>${f} (${dayName})</li>`;
+                })
+                .join('');
+        }
+
+        document.getElementById('personaNoDisponible').addEventListener('change', function () {
+            actualizarListaNoDisponibilidades(this.value);
+        });
+        document.getElementById('eliminarPersona').addEventListener('change', function () {
+            actualizarListaNoDisponibilidades(this.value);
+        });
+        actualizarSelectPersonas();
+        actualizarListaNoDisponibilidades();
+        actualizarSelectPersonasAEliminar();
+
+        document.getElementById('formularioNoDisponibilidad').addEventListener('submit', event => {
+            event.preventDefault();
+            const fecha = event.target.fechaNoDisponible.value;
+            const persona = event.target.personaNoDisponible.value;
+            noDisponibilidades[fecha] = noDisponibilidades[fecha] || [];
+            if (!noDisponibilidades[fecha].includes(persona)) {
+                noDisponibilidades[fecha].push(persona);
+                localStorage.setItem('noDisponibilidades', JSON.stringify(noDisponibilidades));
+                actualizarListaNoDisponibilidades(persona);
+                event.target.reset();
+            } else {
+                alert('Ya existe esa no disponibilidad.');
+            }
+        });
+
+        document.getElementById('formularioFechasSemana').addEventListener('submit', event => {
+            event.preventDefault();
+            const fecha = event.target.fechaEvento.value;
+            if (!fechasEventos.includes(fecha)) {
+                fechasEventos.push(fecha);
+                actualizarListaFechas();
+                event.target.reset();
+            } else {
+                alert('Fecha ya agregada.');
+            }
+        });
+
+        function actualizarListaFechas() {
+            const ul = document.getElementById('listaFechas');
+            const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+            ul.innerHTML = fechasEventos
+                .sort()
+                .map(f => {
+                    const [y, m, d] = f.split('-').map(Number);
+                    const dObj = new Date(Date.UTC(y, m - 1, d));
+                    const dayName = diasSemana[dObj.getUTCDay()];
+                    return `<li>${f} (${dayName})</li>`;
+                })
+                .join('');
+        }
+
+        document.getElementById('agregarMesSiguiente').addEventListener('click', () => {
+            const checkboxes = document.querySelectorAll('#formularioFechasSemana input[name="diasSemana"]:checked');
+            const dias = Array.from(checkboxes).map(cb => parseInt(cb.value));
+            if (dias.length === 0) {
+                alert('Selecciona al menos un día de la semana.');
+                return;
+            }
+            const hoy = new Date();
+            const year = hoy.getFullYear();
+            let month = hoy.getMonth() + 1; // next month index
+            let y = year;
+            if (month > 11) { month = 0; y = year + 1; }
+            // compute first and last day of next month
+            const first = new Date(y, month, 1);
+            const last = new Date(y, month + 1, 0);
+            for (let d = new Date(first); d <= last; d.setDate(d.getDate() + 1)) {
+                if (dias.includes(d.getDay())) {
+                    const iso = d.toISOString().slice(0, 10);
+                    if (!fechasEventos.includes(iso)) {
+                        fechasEventos.push(iso);
+                    }
+                }
+            }
+            actualizarListaFechas();
+        });
+        function obtenerDiaYNumero(fechaStr) {
+            const fecha = new Date(fechaStr);
+            const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+            const nombreDia = diasSemana[fecha.getUTCDay()];
+            const numeroDia = fecha.getUTCDate();
+            return `${nombreDia} ${numeroDia}`;
+        }
+        function esColorOscuro(hex) {
+            hex = hex.replace('#', '');
+            const r = parseInt(hex.substr(0, 2), 16);
+            const g = parseInt(hex.substr(2, 2), 16);
+            const b = parseInt(hex.substr(4, 2), 16);
+            const luminancia = 0.299 * r + 0.587 * g + 0.114 * b;
+
+            return luminancia < 128;
+        }
+
+        document.getElementById('generarAsignaciones').addEventListener('click', () => {
+            function shuffle(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            assignedThisCycle.clear();
+            let conteoAsignaciones = {};
+            Object.keys(personas).forEach(p => conteoAsignaciones[p] = 0);
+
+            const duplasAsignadas = new Set(); // para Anfitrión|Coanfitrión
+            let personasAsignadasAnterior = new Set(); // para evitar repetir personas seguidas
+
+            fechasEventos.sort();
+
+            const mesFecha = new Date(fechasEventos[0]);
+            const nombreMes = mesFecha.toLocaleString('es-ES', { month: 'long' });
+            const nombreMesMayuscula = nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1);
+
+
+            let html = `<table><tr><th>${nombreMesMayuscula}</th><th>Anfitrión</th><th>Coanfitrión</th><th>Micrófono 1</th><th>Micrófono 2</th><th>Plataforma</th></tr>`;
+
+            fechasEventos.forEach(fecha => {
+                let disponibles = Object.keys(personas)
+                    .filter(p => !(noDisponibilidades[fecha] || []).includes(p))
+                    .filter(p => !personasAsignadasAnterior.has(p)); // evitar repetidos
+
+                const asignacion = {};
+
+                // Asignar Anfitrión y Coanfitrión
+                let candidatosAnfitrion = disponibles.filter(p => personas[p].roles.includes('Anfitrión'));
+                let candidatosCoanfitrion = disponibles.filter(p => personas[p].roles.includes('Coanfitrión'));
+
+                let preferidosAnfitrion = candidatosAnfitrion.filter(p => conteoAsignaciones[p] < 2);
+                let preferidosCoanfitrion = candidatosCoanfitrion.filter(p => conteoAsignaciones[p] < 2);
+
+                if (preferidosAnfitrion.length === 0) preferidosAnfitrion = candidatosAnfitrion.slice();
+                if (preferidosCoanfitrion.length === 0) preferidosCoanfitrion = candidatosCoanfitrion.slice();
+
+                shuffle(preferidosAnfitrion);
+                shuffle(preferidosCoanfitrion);
+
+                let duplaEncontrada = false;
+                let elegidoAnfitrion = null;
+                let elegidoCoanfitrion = null;
+
+                for (let a of preferidosAnfitrion) {
+                    for (let c of preferidosCoanfitrion) {
+                        if (a === c) continue;
+                        const claveDupla = `${a}|${c}`;
+                        if (!duplasAsignadas.has(claveDupla)) {
+                            elegidoAnfitrion = a;
+                            elegidoCoanfitrion = c;
+                            duplaEncontrada = true;
+                            duplasAsignadas.add(claveDupla);
+                            break;
+                        }
+                    }
+                    if (duplaEncontrada) break;
+                }
+
+                // Si no hay dupla nueva disponible, elegir la mejor aunque se repita
+                if (!duplaEncontrada) {
+                    let minConteo = Infinity;
+                    for (let a of candidatosAnfitrion) {
+                        for (let c of candidatosAnfitrion) {
+                            if (a === c) continue;
+                            const sumaConteo = conteoAsignaciones[a] + conteoAsignaciones[c];
+                            if (sumaConteo < minConteo) {
+                                minConteo = sumaConteo;
+                                elegidoAnfitrion = a;
+                                elegidoCoanfitrion = c;
+                            }
+                        }
+                    }
+                    if (elegidoAnfitrion && elegidoCoanfitrion) {
+                        duplasAsignadas.add(`${elegidoAnfitrion}|${elegidoCoanfitrion}`);
+                    }
+                }
+
+                // Asignar Anfitrión y Coanfitrión
+                if (elegidoAnfitrion) {
+                    asignacion['Anfitrión'] = elegidoAnfitrion;
+                    conteoAsignaciones[elegidoAnfitrion]++;
+                    disponibles = disponibles.filter(p => p !== elegidoAnfitrion);
+                }
+                if (elegidoCoanfitrion) {
+                    asignacion['Coanfitrión'] = elegidoCoanfitrion;
+                    conteoAsignaciones[elegidoCoanfitrion]++;
+                    disponibles = disponibles.filter(p => p !== elegidoCoanfitrion);
+                }
+
+                // Asignar Micrófonos y Plataforma
+                ['Micrófono 1', 'Micrófono 2', 'Plataforma'].forEach(rol => {
+                    let candidatos = disponibles.filter(p => personas[p].roles.includes(rol));
+                    let preferidos = candidatos.filter(p => conteoAsignaciones[p] < 2);
+                    if (preferidos.length === 0) preferidos = candidatos.slice();
+
+                    if (preferidos.length > 0) {
+                        shuffle(preferidos);
+                        let elegido = preferidos.reduce((a, b) =>
+                            conteoAsignaciones[a] <= conteoAsignaciones[b] ? a : b
+                        );
+                        asignacion[rol] = elegido;
+                        conteoAsignaciones[elegido]++;
+                        disponibles = disponibles.filter(p => p !== elegido);
+                    } else {
+                        // Elegir aleatoriamente de todos los posibles para evitar "No asignado"
+                        const fallback = Object.keys(personas).filter(p => personas[p].roles.includes(rol));
+                        shuffle(fallback);
+                        const elegido = fallback.find(p => !personasAsignadasAnterior.has(p)) || fallback[0];
+                        asignacion[rol] = elegido;
+                        conteoAsignaciones[elegido]++;
+                    }
+                });
+
+                // Agregar al registro de personas asignadas en esta fecha
+                personasAsignadasAnterior.clear();
+                ['Anfitrión', 'Coanfitrión', 'Micrófono 1', 'Micrófono 2', 'Plataforma'].forEach(rol => {
+                    if (asignacion[rol]) {
+                        personasAsignadasAnterior.add(asignacion[rol]);
+                    }
+                });
+
+                const diaNumero = obtenerDiaYNumero(fecha);
+                html += `<tr><td style="font-weight:bold">${diaNumero}</td>` +
+                    ['Anfitrión', 'Coanfitrión', 'Micrófono 1', 'Micrófono 2', 'Plataforma']
+                        .map(r => {
+                            const persona = asignacion[r];
+                            const color = personas[persona]?.color || '#000';
+                            const textoColor = esColorOscuro(color) ? '#fff' : '#000';
+                            return `<td style="background-color:${color}; color:${textoColor}; font-weight:bold">${persona}</td>`;
+                        })
+                        .join('') +
+                    '</tr>';
+            });
+
+            html += `</table>`;
+            document.getElementById('asignaciones').innerHTML = html;
+        });
+
+        // Limpiar No Disponibilidades button
+        document.getElementById('limpiarNoDisp').addEventListener('click', () => {
+            if (confirm('¿Seguro que quieres eliminar todas las no disponibilidades?')) {
+                // Clear object
+                Object.keys(noDisponibilidades).forEach(key => delete noDisponibilidades[key]);
+                localStorage.setItem('noDisponibilidades', JSON.stringify(noDisponibilidades));
+                // Refresh list for current person
+                const sel = document.getElementById('personaNoDisponible').value;
+                actualizarListaNoDisponibilidades(sel);
+            }
+        });
+        // Limpiar Personas button
+        document.getElementById('limpiarPersonas').addEventListener('click', () => {
+            if (confirm('¿Seguro que quieres eliminar todas las personas?')) {
+                // Clear personas object
+                Object.keys(personas).forEach(key => delete personas[key]);
+                localStorage.setItem('personas', JSON.stringify(personas));
+                actualizarSelectPersonas();
+                // Also clear no-disponibilidades list (since no person selected)
+                actualizarListaNoDisponibilidades(document.getElementById('personaNoDisponible').value);
+                actualizarSelectPersonasAEliminar(document.getElementById('eliminarPersona').value);
+            }
+        });
+        document.getElementById('limpiarPersona').addEventListener('click', () => {
+            const select = document.getElementById('eliminarPersona');
+            const personaSeleccionada = select.value;
+
+            if (personaSeleccionada && confirm('¿Seguro que quieres eliminar esta persona?')) {
+                delete personas[personaSeleccionada];
+                localStorage.setItem('personas', JSON.stringify(personas));
+                actualizarSelectPersonas();
+                actualizarListaNoDisponibilidades(document.getElementById('personaNoDisponible').value);
+                actualizarSelectPersonasAEliminar(document.getElementById('eliminarPersona').value);
+            }
+        });
+    </script>
+</body>
+
+</html>
