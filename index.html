@@ -352,6 +352,7 @@
     </div>
 
     <script>
+        const BASE_URL = 'https://asignacionesav.onrender.com';
         document.getElementById('selectAllRoles').addEventListener('change', function () {
             const checked = this.checked;
             document.querySelectorAll('#formularioPersonas input[name="roles"]').forEach(cb => {
@@ -386,7 +387,7 @@
         }
         async function cargarPersonasDesdeBackend() {
             try {
-                const res = await fetch('http://localhost:3000/personas');
+                const res = await fetch(`${BASE_URL}/personas`)
                 const data = await res.json();
                 personas = {};
                 data.forEach(p => {
@@ -446,10 +447,9 @@
 
         async function cargarNoDisponibilidades() {
             try {
-                const res = await fetch('http://localhost:3000/no-disponibilidades');
+                const res = await fetch(`${BASE_URL}/no-disponibilidades`);
                 const datos = await res.json();
                 noDisponibilidades = {};
-
                 datos.forEach(({ fecha, persona }) => {
                     noDisponibilidades[fecha] = noDisponibilidades[fecha] || [];
                     noDisponibilidades[fecha].push(persona);
@@ -466,7 +466,7 @@
 
         async function cargarFechasEventos() {
             try {
-                const response = await fetch('http://localhost:3000/fechas-eventos');
+                const response = await fetch(`${BASE_URL}/fechas-eventos`);
                 const datos = await response.json();
                 fechasEventos = datos.map(e => e.fecha);
                 actualizarListaFechas();
@@ -516,7 +516,7 @@
             const persona = { nombre, roles, color };
 
             try {
-                const res = await fetch('http://localhost:3000/personas', {
+                const res = await fetch(`${BASE_URL}/personas`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(persona)
@@ -619,7 +619,7 @@
             const fecha = event.target.fechaNoDisponible.value;
             const persona = event.target.personaNoDisponible.value;
             try {
-                const res = await fetch('http://localhost:3000/no-disponibilidad', {
+                const res = await fetch(`${BASE_URL}/no-disponibilidad`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ fecha, persona })
@@ -646,7 +646,7 @@
             event.preventDefault();
             const fecha = event.target.fechaEvento.value;
             try {
-                const res = await fetch('http://localhost:3000/fechas-eventos', {
+                const res = await fetch(`${BASE_URL}/fechas-eventos`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ fecha })
@@ -720,7 +720,7 @@
             }
 
             try {
-                const res = await fetch('http://localhost:3000/fechas-eventos/lote', {
+                const res = await fetch(`${BASE_URL}/fechas-eventos/lote`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ fechas: nuevasFechas })
@@ -961,7 +961,7 @@
         document.getElementById('vaciarEventos').addEventListener('click', async () => {
             if (confirm('¿Seguro que quieres eliminar todas las fechas?')) {
                 try {
-                    await fetch('http://localhost:3000/fecha-eventos', {
+                    await fetch(`${BASE_URL}/fecha-eventos`, {
                         method: 'DELETE'
                     });
                     cargarFechasEventos(); // recarga desde backend
@@ -974,7 +974,7 @@
          document.getElementById('limpiarNoDisp').addEventListener('click', async () => {
             if (confirm('¿Seguro que quieres eliminar todas las no disponibilidades?')) {
                 try {
-                    await fetch('http://localhost:3000/no-disponibilidades', {
+                    await fetch(`${BASE_URL}/no-disponibilidades`, {
                         method: 'DELETE'
                     });
                     const sel = document.getElementById('personaNoDisponible').value;
@@ -990,7 +990,7 @@
         document.getElementById('limpiarPersonas').addEventListener('click', async () => {
             if (confirm('¿Seguro que quieres eliminar todas las personas?')) {
                 try {
-                    await fetch('http://localhost:3000/personas', {
+                    await fetch(`${BASE_URL}/personas`, {
                         method: 'DELETE'
                     });
                     cargarPersonasDesdeBackend(); // recarga personas

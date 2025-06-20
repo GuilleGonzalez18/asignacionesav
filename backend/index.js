@@ -7,7 +7,17 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-mongoose.connect('mongodb://localhost:27017/asignaciones');
+require('dotenv').config();
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+mongoose.connection.once('open', () => {
+  console.log('✅ Conectado a MongoDB Atlas correctamente');
+});
+
 const Persona = mongoose.model('Persona', {
   nombre: String,
   roles: [String],
@@ -33,6 +43,7 @@ app.post('/personas', async (req, res) => {
 
 
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en puerto ${PORT}`);
 });
