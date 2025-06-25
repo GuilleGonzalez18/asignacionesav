@@ -12,10 +12,10 @@ require('dotenv').config();
 const cors = require('cors');
 
 const corsOptions = {
-  origin: 'https://asginacionesav.onrender.com',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: false
+  origin: ['https://asignacionesav.onrender.com', 'http://127.0.0.1:5500'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
 };
+
 
 app.use(cors(corsOptions));
 
