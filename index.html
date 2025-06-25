@@ -589,7 +589,7 @@
             if (!confirm(`¿Eliminar la no disponibilidad de ${persona} en la fecha ${fecha}?`)) return;
 
             try {
-                const res = await fetch(`http://localhost:3000/no-disponibilidades`, {
+                const res = await fetch(`${BASE_URL}/no-disponibilidades`, {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ fecha, persona })
@@ -619,7 +619,7 @@
             const fecha = event.target.fechaNoDisponible.value;
             const persona = event.target.personaNoDisponible.value;
             try {
-                const res = await fetch(`${BASE_URL}/no-disponibilidad`, {
+                const res = await fetch(`${BASE_URL}/no-disponibilidades`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ fecha, persona })
