@@ -2,6 +2,7 @@
 <html lang="es">
 
 <head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <title>Planilla de Asignaciones</title>
     <style>
@@ -996,14 +997,6 @@
                         })
                         .join('') +
                     '</tr>';
-
-            });
-
-            html += `</table>`;
-            document.getElementById('asignaciones').innerHTML = html;
-            const datosParaGuardar = [];
-
-            fechasEventos.forEach(fecha => {
                 datosParaGuardar.push({
                     fecha,
                     asignaciones: {
@@ -1013,136 +1006,140 @@
                         Microfono2: asignacion['Micrófono 2'] || '',
                         Plataforma: asignacion['Plataforma'] || ''
                     }
-                });
-            });
 
-            fetch(`${BASE_URL}/asignaciones-generadas`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(datosParaGuardar)
-            })
-                .then(res => {
-                    if (!res.ok) throw new Error('Error al guardar asignaciones');
-                    console.log('✅ Asignaciones guardadas');
+                });
+
+                html += `</table>`;
+                document.getElementById('asignaciones').innerHTML = html;
+                const datosParaGuardar = [];
+
+                fetch(`${BASE_URL}/asignaciones-generadas`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(datosParaGuardar)
                 })
-                .catch(err => console.error(err));
+                    .then(res => {
+                        if (!res.ok) throw new Error('Error al guardar asignaciones');
+                        console.log('✅ Asignaciones guardadas');
+                    })
+                    .catch(err => console.error(err));
 
-            document.querySelectorAll('#asignaciones td[data-persona]').forEach(td => {
-                td.addEventListener('click', () => {
-                    const nombre = td.dataset.persona;
-                    const rol = td.dataset.rol;
-                    const fecha = td.dataset.fecha;
+                document.querySelectorAll('#asignaciones td[data-persona]').forEach(td => {
+                    td.addEventListener('click', () => {
+                        const nombre = td.dataset.persona;
+                        const rol = td.dataset.rol;
+                        const fecha = td.dataset.fecha;
 
-                    // Mensajes personalizados por rol
-                    const mensajes = {
-                        'Anfitrión': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás de Anfitrión el ${fecha}.\n` +
-                            `Solo por recordatorio: tener presente llegar al menos 10 minutos antes, para poder preparar los equipos.\n` +
-                            `Queremos que la reunión salga lo mejor posible, para que los hermanos puedan disfrutarla y que sea de alabanza a Jehová.\n` +
-                            `¡Muchísimas gracias por tu buena disponibilidad!\n` +
-                            `Cuando te sea posible, confirmame la asignación.\n` +
-                            `¡Un abrazo grande!`,
+                        // Mensajes personalizados por rol
+                        const mensajes = {
+                            'Anfitrión': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás de Anfitrión el ${fecha}.\n` +
+                                `Solo por recordatorio: tener presente llegar al menos 10 minutos antes, para poder preparar los equipos.\n` +
+                                `Queremos que la reunión salga lo mejor posible, para que los hermanos puedan disfrutarla y que sea de alabanza a Jehová.\n` +
+                                `¡Muchísimas gracias por tu buena disponibilidad!\n` +
+                                `Cuando te sea posible, confirmame la asignación.\n` +
+                                `¡Un abrazo grande!`,
 
-                        'Coanfitrión': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás de Co-Anfitrión el ${fecha}.\n` +
-                            `Solo por recordatorio: tener presente llegar al menos 10 minutos antes, para poder preparar los equipos y probar micrófonos.\n` +
-                            `Queremos que la reunión salga lo mejor posible, para que los hermanos puedan disfrutarla y que sea de alabanza a Jehová.\n` +
-                            `¡Muchísimas gracias por tu buena disponibilidad!\n` +
-                            `Cuando te sea posible, confirmame la asignación.\n` +
-                            `¡Un abrazo grande!`,
+                            'Coanfitrión': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás de Co-Anfitrión el ${fecha}.\n` +
+                                `Solo por recordatorio: tener presente llegar al menos 10 minutos antes, para poder preparar los equipos y probar micrófonos.\n` +
+                                `Queremos que la reunión salga lo mejor posible, para que los hermanos puedan disfrutarla y que sea de alabanza a Jehová.\n` +
+                                `¡Muchísimas gracias por tu buena disponibilidad!\n` +
+                                `Cuando te sea posible, confirmame la asignación.\n` +
+                                `¡Un abrazo grande!`,
 
-                        'Micrófono 1': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás como Micrófono 1 el ${fecha}.\n` +
-                            `¡Muchísimas gracias por tu buena disponibilidad!\n` +
-                            `Cuando te sea posible, confirmame la asignación.\n` +
-                            `¡Un abrazo grande!`,
+                            'Micrófono 1': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás como Micrófono 1 el ${fecha}.\n` +
+                                `¡Muchísimas gracias por tu buena disponibilidad!\n` +
+                                `Cuando te sea posible, confirmame la asignación.\n` +
+                                `¡Un abrazo grande!`,
 
-                        'Micrófono 2': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás como Micrófono 2 el ${fecha}.\n` +
-                            `¡Muchísimas gracias por tu buena disponibilidad!\n` +
-                            `Cuando te sea posible, confirmame la asignación.\n` +
-                            `¡Un abrazo grande!`,
+                            'Micrófono 2': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás como Micrófono 2 el ${fecha}.\n` +
+                                `¡Muchísimas gracias por tu buena disponibilidad!\n` +
+                                `Cuando te sea posible, confirmame la asignación.\n` +
+                                `¡Un abrazo grande!`,
 
-                        'Plataforma': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás como Plataforma el ${fecha}.\n` +
-                            `Solo por recordatorio: tener presente llegar al menos 10 minutos antes, para poder probar los micrófonos y la tablet.\n` +
-                            `Queremos que la reunión salga lo mejor posible, para que los hermanos puedan disfrutarla y que sea de alabanza a Jehová.\n` +
-                            `¡Muchísimas gracias por tu buena disponibilidad!\n` +
-                            `Cuando te sea posible, confirmame la asignación.\n` +
-                            `¡Un abrazo grande!`
-                    };
-                    const mensaje = mensajes[rol];
+                            'Plataforma': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás como Plataforma el ${fecha}.\n` +
+                                `Solo por recordatorio: tener presente llegar al menos 10 minutos antes, para poder probar los micrófonos y la tablet.\n` +
+                                `Queremos que la reunión salga lo mejor posible, para que los hermanos puedan disfrutarla y que sea de alabanza a Jehová.\n` +
+                                `¡Muchísimas gracias por tu buena disponibilidad!\n` +
+                                `Cuando te sea posible, confirmame la asignación.\n` +
+                                `¡Un abrazo grande!`
+                        };
+                        const mensaje = mensajes[rol];
 
-                    navigator.clipboard.writeText(mensaje)
-                        .then(() => {
-                            td.style.outline = '2px solid limegreen';
-                            setTimeout(() => td.style.outline = '', 1000);
-                        })
-                        .catch(err => {
-                            console.error('Error al copiar al portapapeles: ', err);
-                        });
+                        navigator.clipboard.writeText(mensaje)
+                            .then(() => {
+                                td.style.outline = '2px solid limegreen';
+                                setTimeout(() => td.style.outline = '', 1000);
+                            })
+                            .catch(err => {
+                                console.error('Error al copiar al portapapeles: ', err);
+                            });
+                    });
                 });
+
             });
 
-        });
 
-
-        document.getElementById('vaciarEventos').addEventListener('click', async () => {
-            if (confirm('¿Seguro que quieres eliminar todas las fechas?')) {
-                try {
-                    await fetch(`${BASE_URL}/fecha-eventos`, {
-                        method: 'DELETE'
-                    });
-                    cargarFechasEventos(); // recarga desde backend
-                } catch (err) {
-                    console.error('Error al eliminar los fechas:', err);
+            document.getElementById('vaciarEventos').addEventListener('click', async () => {
+                if (confirm('¿Seguro que quieres eliminar todas las fechas?')) {
+                    try {
+                        await fetch(`${BASE_URL}/fecha-eventos`, {
+                            method: 'DELETE'
+                        });
+                        cargarFechasEventos(); // recarga desde backend
+                    } catch (err) {
+                        console.error('Error al eliminar los fechas:', err);
+                    }
                 }
-            }
-        });
+            });
 
-        document.getElementById('limpiarNoDisp').addEventListener('click', async () => {
-            if (confirm('¿Seguro que quieres eliminar todas las no disponibilidades?')) {
-                try {
-                    await fetch(`${BASE_URL}/no-disponibilidades`, {
-                        method: 'DELETE'
-                    });
-                    const sel = document.getElementById('personaNoDisponible').value;
-                    cargarNoDisponibilidades(); // recarga desde backend
-                    actualizarListaNoDisponibilidades(sel);
-                } catch (err) {
-                    console.error('Error al eliminar todas las no disponibilidades:', err);
+            document.getElementById('limpiarNoDisp').addEventListener('click', async () => {
+                if (confirm('¿Seguro que quieres eliminar todas las no disponibilidades?')) {
+                    try {
+                        await fetch(`${BASE_URL}/no-disponibilidades`, {
+                            method: 'DELETE'
+                        });
+                        const sel = document.getElementById('personaNoDisponible').value;
+                        cargarNoDisponibilidades(); // recarga desde backend
+                        actualizarListaNoDisponibilidades(sel);
+                    } catch (err) {
+                        console.error('Error al eliminar todas las no disponibilidades:', err);
+                    }
                 }
-            }
-        });
+            });
 
-        // Limpiar Personas button
-        document.getElementById('limpiarPersonas').addEventListener('click', async () => {
-            if (confirm('¿Seguro que quieres eliminar todas las personas?')) {
-                try {
-                    await fetch(`${BASE_URL}/personas`, {
-                        method: 'DELETE'
-                    });
-                    cargarPersonasDesdeBackend(); // recarga personas
-                    cargarNoDisponibilidades();   // recarga no disponibilidades
-                } catch (err) {
-                    console.error('Error al eliminar todas las personas:', err);
+            // Limpiar Personas button
+            document.getElementById('limpiarPersonas').addEventListener('click', async () => {
+                if (confirm('¿Seguro que quieres eliminar todas las personas?')) {
+                    try {
+                        await fetch(`${BASE_URL}/personas`, {
+                            method: 'DELETE'
+                        });
+                        cargarPersonasDesdeBackend(); // recarga personas
+                        cargarNoDisponibilidades();   // recarga no disponibilidades
+                    } catch (err) {
+                        console.error('Error al eliminar todas las personas:', err);
+                    }
                 }
-            }
-        });
+            });
 
-        document.getElementById('limpiarPersona').addEventListener('click', async () => {
-            const select = document.getElementById('eliminarPersona');
-            const personaSeleccionada = select.value;
+            document.getElementById('limpiarPersona').addEventListener('click', async () => {
+                const select = document.getElementById('eliminarPersona');
+                const personaSeleccionada = select.value;
 
-            if (personaSeleccionada && confirm('¿Seguro que quieres eliminar esta persona?')) {
-                try {
-                    await fetch(`${BASE_URL}/personas/${encodeURIComponent(personaSeleccionada)}`, {
-                        method: 'DELETE'
-                    });
-                    cargarPersonasDesdeBackend();
-                    cargarNoDisponibilidades();
-                } catch (err) {
-                    console.error('Error al eliminar persona:', err);
+                if (personaSeleccionada && confirm('¿Seguro que quieres eliminar esta persona?')) {
+                    try {
+                        await fetch(`${BASE_URL}/personas/${encodeURIComponent(personaSeleccionada)}`, {
+                            method: 'DELETE'
+                        });
+                        cargarPersonasDesdeBackend();
+                        cargarNoDisponibilidades();
+                    } catch (err) {
+                        console.error('Error al eliminar persona:', err);
+                    }
                 }
-            }
-        });
+            });
 
     </script>
 </body>
