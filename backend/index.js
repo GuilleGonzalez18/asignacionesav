@@ -146,6 +146,27 @@ app.delete('/no-disponibilidad', async (req, res) => {
   }
 });
 
+app.post('/no-disponibilidad', async (req, res) => {
+  const { fecha, persona } = req.body;
+  if (!fecha || !persona) {
+    return res.status(400).json({ mensaje: 'Faltan datos' });
+  }
+
+  try {
+    const yaExiste = await NoDisponibilidad.findOne({ fecha, persona });
+    if (yaExiste) {
+      return res.status(400).json({ mensaje: 'Ya existe esa no disponibilidad' });
+    }
+
+    const nueva = new NoDisponibilidad({ fecha, persona });
+    await nueva.save();
+    res.status(201).json(nueva);
+  } catch (err) {
+    res.status(500).json({ mensaje: err.message });
+  }
+});
+
+
 app.delete('/fecha-eventos', async (req, res) => {
     try {
         await FechaEvento.deleteMany({});
