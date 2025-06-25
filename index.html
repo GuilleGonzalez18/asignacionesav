@@ -777,6 +777,9 @@
                             const color = personas[nombre]?.color || '#000000';
                             const textoColor = esColorOscuro(color) ? '#fff' : '#000';
                             const nombreRol = rol.replace('Microfono', 'Micrófono ').replace('Coanfitrion', 'Coanfitrión').replace('Anfitrion', 'Anfitrión');
+                            if (!personas[nombre]) {
+                                console.warn(`❗ Persona no encontrada: "${nombre}"`);
+                            }
 
                             return `<td 
             style="background-color:${color}; color:${textoColor}; font-weight:bold; cursor:pointer"
@@ -998,7 +1001,7 @@
                         })
                         .join('') +
                     '</tr>';
-                        datosParaGuardar.push({
+                datosParaGuardar.push({
                     fecha,
                     asignaciones: {
                         Anfitrion: asignacion['Anfitrión'] || '',
