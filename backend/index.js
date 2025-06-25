@@ -69,6 +69,44 @@ const noDisponibilidadSchema = new mongoose.Schema({
 
 const NoDisponibilidad = mongoose.model('NoDisponibilidad', noDisponibilidadSchema);
 
+const asignacionGeneradaSchema = new mongoose.Schema({
+  fecha: { type: Date, default: Date.now },
+  asignaciones: mongoose.Schema.Types.Mixed  // Puede ser un array o un objeto según cómo guardes
+});
+
+const asignacionSchema = new mongoose.Schema({
+  fecha: String,
+  asignaciones: {
+    Anfitrion: String,
+    Coanfitrion: String,
+    Microfono1: String,
+    Microfono2: String,
+    Plataforma: String
+  }
+});
+
+const AsignacionGenerada = mongoose.model('AsignacionGenerada', asignacionSchema);
+
+app.post('/asignaciones-generadas', async (req, res) => {
+  try {
+    await AsignacionGenerada.deleteMany(); // Borra la anterior
+    await AsignacionGenerada.insertMany(req.body); // Guarda la nueva
+    res.status(200).json({ mensaje: 'Asignaciones guardadas correctamente' });
+  } catch (error) {
+    res.status(500).json({ mensaje: error.message });
+  }
+});
+
+
+app.get('/asignaciones-generadas', async (req, res) => {
+  try {
+    const asignaciones = await AsignacionGenerada.find();
+    res.json(asignaciones);
+  } catch (error) {
+    res.status(500).json({ mensaje: error.message });
+  }
+});
+
 
 app.get('/no-disponibilidades', async (req, res) => {
     const datos = await NoDisponibilidad.find();
