@@ -443,6 +443,16 @@
                 alert(`La persona "${nombre}" no existe. Debes agregarla.`);
                 return;
             }
+            if (roles.length === 0) {
+                alert('Selecciona al menos un rol.');
+                return;
+            }
+            const dias = {};
+            roles.forEach(rol => {
+                const radio = form.querySelector(`input[name="dia_${rol}"]:checked`);
+                dias[rol] = radio ? radio.value : "Ambos";
+            });
+
             try {
                 const res = await fetch(`${BASE_URL}/personas/${encodeURIComponent(nombre)}`, {
                     method: 'PUT',
@@ -456,7 +466,6 @@
                     throw new Error(error.mensaje || 'Error al actualizar persona');
                 }
                 const personaActualizada = await res.json();
-                // Actualizar en memoria
                 personas[nombre] = personaActualizada;
                 actualizarSelectPersonas();
                 actualizarSelectPersonasAEliminar(nombre);
