@@ -28,8 +28,13 @@ mongoose.connection.once('open', () => {
 const Persona = mongoose.model('Persona', {
   nombre: String,
   roles: [String],
-  color: String
+  color: String,
+  dias: {
+    type: Map,
+    of: String
+  }
 });
+
 const fechaEventoSchema = new mongoose.Schema({
     fecha: String
 });
@@ -43,6 +48,7 @@ app.get('/personas', async (req, res) => {
 });
 
 app.post('/personas', async (req, res) => {
+  console.log('Persona a guardar:', req.body); // 
   const persona = new Persona(req.body);
   await persona.save();
   res.json(persona);
@@ -245,12 +251,12 @@ app.delete('/personas/:nombre', async (req, res) => {
 
 app.put('/personas/:nombre', async (req, res) => {
     const nombre = req.params.nombre;
-    const { color, roles } = req.body;
+    const { color, roles, dias } = req.body;
 
     try {
         const persona = await Persona.findOneAndUpdate(
             { nombre },
-            { color, roles },
+            { color, roles, dias },
             { new: true }
         );
 
@@ -260,5 +266,6 @@ app.put('/personas/:nombre', async (req, res) => {
         res.status(500).json({ mensaje: error.message });
     }
 });
+
 
 

@@ -435,12 +435,14 @@
             const nombre = document.getElementById('nombrePersona').value.trim();
             const color = document.getElementById('colorPersona').value;
             const roles = Array.from(document.querySelectorAll('input[name="roles"]:checked')).map(cb => cb.value);
-
             if (!nombre) {
                 alert('Por favor, ingresa un nombre para actualizar.');
                 return;
             }
-
+            if (!personas[nombre]) {
+                alert(`La persona "${nombre}" no existe. Debes agregarla.`);
+                return;
+            }
             try {
                 const res = await fetch(`${BASE_URL}/personas/${encodeURIComponent(nombre)}`, {
                     method: 'PUT',
@@ -449,19 +451,15 @@
                     },
                     body: JSON.stringify({ color, roles })
                 });
-
                 if (!res.ok) {
                     const error = await res.json();
                     throw new Error(error.mensaje || 'Error al actualizar persona');
                 }
-
                 const personaActualizada = await res.json();
-
                 // Actualizar en memoria
                 personas[nombre] = personaActualizada;
                 actualizarSelectPersonas();
                 actualizarSelectPersonasAEliminar(nombre);
-
                 alert('Persona actualizada correctamente.');
             } catch (err) {
                 console.error(err);
@@ -519,27 +517,42 @@
             cargarDatosPersona(nombre);
         });
 
-
-        document.getElementById('formularioPersonas').addEventListener('submit', async event => {
+        document.getElementById('agregarPersona').addEventListener('click', async event => {
             event.preventDefault();
-            const nombre = event.target.nombrePersona.value.trim();
-            const roles = Array.from(event.target.querySelectorAll('input[name="roles"]:checked'))
-                .map(cb => cb.value);
+
+            const form = document.getElementById('formularioPersonas');
+            const nombre = form.nombrePersona.value.trim();
+
             if (!nombre) {
                 alert('Ingresa un nombre válido.');
                 return;
             }
-            if (personas[nombre]) {
-                if (!confirm(`La persona "${nombre}" ya existe. ¿Deseas sobreescribir sus roles?`)) {
-                    return;
-                }
-            }
-            if (roles.length === 0) {
+
+            const rolesSeleccionados = Array.from(form.querySelectorAll('input[name="roles"]:checked'))
+                .map(cb => cb.value);
+
+            if (rolesSeleccionados.length === 0) {
                 alert('Selecciona al menos un rol.');
                 return;
             }
-            const color = event.target.colorPersona.value;
-            const persona = { nombre, roles, color };
+
+            // Obtener los días asignados para cada rol seleccionado
+            const dias = {};
+            rolesSeleccionados.forEach(rol => {
+                const radio = form.querySelector(`input[name="dia_${rol}"]:checked`);
+                dias[rol] = radio ? radio.value : "Ambos"; // por defecto
+            });
+
+            const color = form.colorPersona.value;
+
+            const persona = { nombre, roles: rolesSeleccionados, dias, color };
+
+            if (personas[nombre]) {
+                alert(`La persona "${nombre}" ya existe. Debes seleccionar actualizar.`);
+                return;
+            }
+
+            console.log("Persona a guardar:", persona);
 
             try {
                 const res = await fetch(`${BASE_URL}/personas`, {
@@ -558,9 +571,10 @@
                 alert("No se pudo guardar la persona.");
             }
 
-            event.target.nombrePersona.value = '';
-            uncheckBox();
+            form.reset();
         });
+
+
 
         function cargarDatosPersona(nombre) {
             const persona = personas[nombre];
