@@ -289,12 +289,36 @@
                 <label><input type="checkbox" id="selectAllRoles"> Asignar todos los roles</label>
                 <fieldset>
                     <legend>Roles Permitidos:</legend>
-                    <label><input type="checkbox" name="roles" value="Anfitrión" id="cbxAnfitrion"> Anfitrión</label>
-                    <label><input type="checkbox" name="roles" value="Coanfitrión" id="cbxCoAnfitrion">
-                        Coanfitrión</label>
-                    <label><input type="checkbox" name="roles" value="Micrófono 1" id="cbxMicro1"> Micrófono 1</label>
-                    <label><input type="checkbox" name="roles" value="Micrófono 2" id="cbxMicro2"> Micrófono 2</label>
-                    <label><input type="checkbox" name="roles" value="Plataforma" id="cbxPlataforma"> Plataforma</label>
+                    <label>
+                        <input type="checkbox" name="roles" value="Anfitrión"> Anfitrión
+                        <label><input type="radio" name="dia_Anfitrión" value="Jueves"> Jue</label>
+                        <label><input type="radio" name="dia_Anfitrión" value="Domingo"> Dom</label>
+                        <label><input type="radio" name="dia_Anfitrión" value="Ambos" checked> Ambos</label>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="roles" value="Coanfitrión"> Coanfitrión
+                        <label><input type="radio" name="dia_Coanfitrión" value="Jueves"> Jue</label>
+                        <label><input type="radio" name="dia_Coanfitrión" value="Domingo"> Dom</label>
+                        <label><input type="radio" name="dia_Coanfitrión" value="Ambos" checked> Ambos</label>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="roles" value="Micrófono 1"> Micrófono 1
+                        <label><input type="radio" name="dia_Micrófono1" value="Jueves"> Jue</label>
+                        <label><input type="radio" name="dia_Micrófono1" value="Domingo"> Dom</label>
+                        <label><input type="radio" name="dia_Micrófono1" value="Ambos" checked> Ambos</label>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="roles" value="Micrófono 2"> Micrófono 2
+                        <label><input type="radio" name="dia_Micrófono2" value="Jueves"> Jue</label>
+                        <label><input type="radio" name="dia_Micrófono2" value="Domingo"> Dom</label>
+                        <label><input type="radio" name="dia_Micrófono2" value="Ambos" checked> Ambos</label>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="roles" value="Plataforma"> Plataforma
+                        <label><input type="radio" name="dia_Plataforma" value="Jueves"> Jue</label>
+                        <label><input type="radio" name="dia_Plataforma" value="Domingo"> Dom</label>
+                        <label><input type="radio" name="dia_Plataforma" value="Ambos" checked> Ambos</label>
+                    </label>
                 </fieldset>
                 <div class="button-group">
                     <button type="submit" id="agregarPersona">Agregar Persona</button>
@@ -757,7 +781,6 @@
 
             return luminancia < 128;
         }
-        //Cargamos ultima tabla
 
         function mostrarTablaAsignaciones(data) {
             const mesFecha = new Date(data[0].fecha);
@@ -890,10 +913,23 @@
                     .filter(p => !personasAsignadasAnterior.has(p)); // evitar repetidos
 
                 const asignacion = {};
+                let diaEvento = new Date(fecha).getDay() === 4 ? "Jueves" : "Domingo";
 
-                // Asignar Anfitrión y Coanfitrión
-                let candidatosAnfitrion = disponibles.filter(p => personas[p].roles.includes('Anfitrión'));
-                let candidatosCoanfitrion = disponibles.filter(p => personas[p].roles.includes('Coanfitrión'));
+                let candidatosAnfitrion = disponibles.filter(p =>
+                    personas[p].roles.includes("Anfitrión") &&
+                    (
+                        personas[p].dias["Anfitrión"] === "Ambos" ||
+                        personas[p].dias["Anfitrión"] === diaEvento
+                    )
+                );
+                let candidatosCoanfitrion = disponibles.filter(p =>
+                    personas[p].roles.includes("Coanfitrión") &&
+                    (
+                        personas[p].dias["Coanfitrión"] === "Ambos" ||
+                        personas[p].dias["Coanfitrión"] === diaEvento
+                    )
+                );
+
 
                 let preferidosAnfitrion = candidatosAnfitrion.filter(p => conteoAsignaciones[p] < 2);
                 let preferidosCoanfitrion = candidatosCoanfitrion.filter(p => conteoAsignaciones[p] < 2);
@@ -954,7 +990,14 @@
 
                 // Asignar Micrófonos y Plataforma
                 ['Micrófono 1', 'Micrófono 2', 'Plataforma'].forEach(rol => {
-                    let candidatos = disponibles.filter(p => personas[p].roles.includes(rol));
+                    let candidatos = disponibles.filter(p =>
+                        personas[p].roles.includes(rol) &&
+                        (
+                            personas[p].dias?.[rol] === "Ambos" ||
+                            personas[p].dias?.[rol] === diaEvento
+                        )
+                    );
+
                     let preferidos = candidatos.filter(p => conteoAsignaciones[p] < 2);
                     if (preferidos.length === 0) preferidos = candidatos.slice();
 
@@ -968,7 +1011,13 @@
                         disponibles = disponibles.filter(p => p !== elegido);
                     } else {
                         // Elegir aleatoriamente de todos los posibles para evitar "No asignado"
-                        const fallback = Object.keys(personas).filter(p => personas[p].roles.includes(rol));
+                        const fallback = Object.keys(personas).filter(p =>
+                            personas[p].roles.includes(rol) &&
+                            (
+                                personas[p].dias?.[rol] === "Ambos" ||
+                                personas[p].dias?.[rol] === diaEvento
+                            )
+                        );
                         shuffle(fallback);
                         const elegido = fallback.find(p => !personasAsignadasAnterior.has(p)) || fallback[0];
                         asignacion[rol] = elegido;
@@ -976,7 +1025,8 @@
                     }
                 });
 
-                // Agregar al registro de personas asignadas en esta fecha
+
+
                 personasAsignadasAnterior.clear();
                 ['Anfitrión', 'Coanfitrión', 'Micrófono 1', 'Micrófono 2', 'Plataforma'].forEach(rol => {
                     if (asignacion[rol]) {
