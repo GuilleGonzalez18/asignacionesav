@@ -258,7 +258,7 @@ app.put('/personas/:nombre', async (req, res) => {
         const persona = await Persona.findOneAndUpdate(
             { nombre },
             { color, roles, dias },
-            { new: true }
+            { new: true, upsert: false }
         );
 
         if (!persona) return res.status(404).json({ mensaje: 'Persona no encontrada' });

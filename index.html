@@ -432,9 +432,11 @@
         let noDisponibilidades = {};
 
         document.getElementById('actualizarPersona').addEventListener('click', async () => {
+            const form = document.getElementById('formularioPersonas');
             const nombre = document.getElementById('nombrePersona').value.trim();
             const color = document.getElementById('colorPersona').value;
             const roles = Array.from(document.querySelectorAll('input[name="roles"]:checked')).map(cb => cb.value);
+
             if (!nombre) {
                 alert('Por favor, ingresa un nombre para actualizar.');
                 return;
@@ -447,6 +449,7 @@
                 alert('Selecciona al menos un rol.');
                 return;
             }
+
             const dias = {};
             roles.forEach(rol => {
                 const radio = form.querySelector(`input[name="dia_${rol}"]:checked`);
@@ -474,7 +477,8 @@
                 console.error(err);
                 alert('Hubo un error al actualizar la persona.');
             }
-            event.target.nombrePersona.value = '';
+
+            document.getElementById('nombrePersona').value = '';
             uncheckBox();
         });
 
