@@ -459,7 +459,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ color, roles })
+                    body: JSON.stringify({ color, roles, dias })
                 });
                 if (!res.ok) {
                     const error = await res.json();
