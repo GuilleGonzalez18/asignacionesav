@@ -937,26 +937,25 @@
             fechasEventos.forEach(fecha => {
                 let disponibles = Object.keys(personas)
                     .filter(p => !(noDisponibilidades[fecha] || []).includes(p))
-                    .filter(p => !personasAsignadasAnterior.has(p)); // evitar repetidos
-
+                    .filter(p => !personasAsignadasAnterior.has(p));
                 const asignacion = {};
                 let diaEvento = new Date(fecha).getDay() === 4 ? "Jueves" : "Domingo";
 
                 let candidatosAnfitrion = disponibles.filter(p =>
                     personas[p].roles.includes("Anfitrión") &&
                     (
-                        personas[p].dias["Anfitrión"] === "Ambos" ||
-                        personas[p].dias["Anfitrión"] === diaEvento
-                    )
-                );
-                let candidatosCoanfitrion = disponibles.filter(p =>
-                    personas[p].roles.includes("Coanfitrión") &&
-                    (
-                        personas[p].dias["Coanfitrión"] === "Ambos" ||
-                        personas[p].dias["Coanfitrión"] === diaEvento
+                        personas[p].dias?.["Anfitrión"] === "Ambos" ||
+                        personas[p].dias?.["Anfitrión"] === diaEvento
                     )
                 );
 
+                let candidatosCoanfitrion = disponibles.filter(p =>
+                    personas[p].roles.includes("Coanfitrión") &&
+                    (
+                        personas[p].dias?.["Coanfitrión"] === "Ambos" ||
+                        personas[p].dias?.["Coanfitrión"] === diaEvento
+                    )
+                );
 
                 let preferidosAnfitrion = candidatosAnfitrion.filter(p => conteoAsignaciones[p] < 2);
                 let preferidosCoanfitrion = candidatosCoanfitrion.filter(p => conteoAsignaciones[p] < 2);
@@ -985,6 +984,7 @@
                     }
                     if (duplaEncontrada) break;
                 }
+
                 if (!duplaEncontrada) {
                     let minConteo = Infinity;
                     for (let a of candidatosAnfitrion) {
@@ -1003,7 +1003,6 @@
                     }
                 }
 
-                // Asignar Anfitrión y Coanfitrión
                 if (elegidoAnfitrion) {
                     asignacion['Anfitrión'] = elegidoAnfitrion;
                     conteoAsignaciones[elegidoAnfitrion]++;
@@ -1015,7 +1014,6 @@
                     disponibles = disponibles.filter(p => p !== elegidoCoanfitrion);
                 }
 
-                // Asignar Micrófonos y Plataforma
                 ['Micrófono 1', 'Micrófono 2', 'Plataforma'].forEach(rol => {
                     let candidatos = disponibles.filter(p =>
                         personas[p].roles.includes(rol) &&
@@ -1037,7 +1035,6 @@
                         conteoAsignaciones[elegido]++;
                         disponibles = disponibles.filter(p => p !== elegido);
                     } else {
-                        // Elegir aleatoriamente de todos los posibles para evitar "No asignado"
                         const fallback = Object.keys(personas).filter(p =>
                             personas[p].roles.includes(rol) &&
                             (
@@ -1051,112 +1048,114 @@
                         conteoAsignaciones[elegido]++;
                     }
                 });
+            });
 
 
 
-                personasAsignadasAnterior.clear();
-                ['Anfitrión', 'Coanfitrión', 'Micrófono 1', 'Micrófono 2', 'Plataforma'].forEach(rol => {
-                    if (asignacion[rol]) {
-                        personasAsignadasAnterior.add(asignacion[rol]);
-                    }
-                });
 
-                const diaNumero = obtenerDiaYNumero(fecha);
-                html += `<tr><td style="font-weight:bold">${diaNumero}</td>` +
-                    ['Anfitrión', 'Coanfitrión', 'Micrófono 1', 'Micrófono 2', 'Plataforma']
-                        .map(r => {
-                            const persona = asignacion[r];
-                            const color = personas[persona]?.color || '#000';
-                            const textoColor = esColorOscuro(color) ? '#fff' : '#000';
-                            return `<td 
+            personasAsignadasAnterior.clear();
+            ['Anfitrión', 'Coanfitrión', 'Micrófono 1', 'Micrófono 2', 'Plataforma'].forEach(rol => {
+                if (asignacion[rol]) {
+                    personasAsignadasAnterior.add(asignacion[rol]);
+                }
+            });
+
+            const diaNumero = obtenerDiaYNumero(fecha);
+            html += `<tr><td style="font-weight:bold">${diaNumero}</td>` +
+                ['Anfitrión', 'Coanfitrión', 'Micrófono 1', 'Micrófono 2', 'Plataforma']
+                    .map(r => {
+                        const persona = asignacion[r];
+                        const color = personas[persona]?.color || '#000';
+                        const textoColor = esColorOscuro(color) ? '#fff' : '#000';
+                        return `<td 
                         style="background-color:${color}; color:${textoColor}; font-weight:bold; cursor:pointer"
                         data-persona="${persona}" 
                         data-rol="${r}" 
                         data-fecha="${diaNumero}">
                         ${persona}
                     </td>`;
-                        })
-                        .join('') +
-                    '</tr>';
-                datosParaGuardar.push({
-                    fecha,
-                    asignaciones: {
-                        Anfitrion: asignacion['Anfitrión'] || '',
-                        Coanfitrion: asignacion['Coanfitrión'] || '',
-                        Microfono1: asignacion['Micrófono 1'] || '',
-                        Microfono2: asignacion['Micrófono 2'] || '',
-                        Plataforma: asignacion['Plataforma'] || ''
-                    }
-                });
+                    })
+                    .join('') +
+                '</tr>';
+            datosParaGuardar.push({
+                fecha,
+                asignaciones: {
+                    Anfitrion: asignacion['Anfitrión'] || '',
+                    Coanfitrion: asignacion['Coanfitrión'] || '',
+                    Microfono1: asignacion['Micrófono 1'] || '',
+                    Microfono2: asignacion['Micrófono 2'] || '',
+                    Plataforma: asignacion['Plataforma'] || ''
+                }
             });
+        });
 
-            html += `</table>`;
-            document.getElementById('asignaciones').innerHTML = html;
+        html += `</table>`;
+        document.getElementById('asignaciones').innerHTML = html;
 
-            fetch(`${BASE_URL}/asignaciones-generadas`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(datosParaGuardar)
+        fetch(`${BASE_URL}/asignaciones-generadas`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datosParaGuardar)
+        })
+            .then(res => {
+                if (!res.ok) throw new Error('Error al guardar asignaciones');
+                console.log('✅ Asignaciones guardadas');
             })
-                .then(res => {
-                    if (!res.ok) throw new Error('Error al guardar asignaciones');
-                    console.log('✅ Asignaciones guardadas');
-                })
-                .catch(err => console.error(err));
+            .catch(err => console.error(err));
 
-            document.querySelectorAll('#asignaciones td[data-persona]').forEach(td => {
-                td.addEventListener('click', () => {
-                    const nombre = td.dataset.persona;
-                    const rol = td.dataset.rol;
-                    const fecha = td.dataset.fecha;
+        document.querySelectorAll('#asignaciones td[data-persona]').forEach(td => {
+            td.addEventListener('click', () => {
+                const nombre = td.dataset.persona;
+                const rol = td.dataset.rol;
+                const fecha = td.dataset.fecha;
 
-                    // Mensajes personalizados por rol
-                    const mensajes = {
-                        'Anfitrión': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás de Anfitrión el ${fecha}.\n` +
-                            `Solo por recordatorio: tener presente llegar al menos 10 minutos antes, para poder preparar los equipos.\n` +
-                            `Queremos que la reunión salga lo mejor posible, para que los hermanos puedan disfrutarla y que sea de alabanza a Jehová.\n` +
-                            `¡Muchísimas gracias por tu buena disponibilidad!\n` +
-                            `Cuando te sea posible, confirmame la asignación.\n` +
-                            `¡Un abrazo grande!`,
+                // Mensajes personalizados por rol
+                const mensajes = {
+                    'Anfitrión': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás de Anfitrión el ${fecha}.\n` +
+                        `Solo por recordatorio: tener presente llegar al menos 10 minutos antes, para poder preparar los equipos.\n` +
+                        `Queremos que la reunión salga lo mejor posible, para que los hermanos puedan disfrutarla y que sea de alabanza a Jehová.\n` +
+                        `¡Muchísimas gracias por tu buena disponibilidad!\n` +
+                        `Cuando te sea posible, confirmame la asignación.\n` +
+                        `¡Un abrazo grande!`,
 
-                        'Coanfitrión': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás de Co-Anfitrión el ${fecha}.\n` +
-                            `Solo por recordatorio: tener presente llegar al menos 10 minutos antes, para poder preparar los equipos y probar micrófonos.\n` +
-                            `Queremos que la reunión salga lo mejor posible, para que los hermanos puedan disfrutarla y que sea de alabanza a Jehová.\n` +
-                            `¡Muchísimas gracias por tu buena disponibilidad!\n` +
-                            `Cuando te sea posible, confirmame la asignación.\n` +
-                            `¡Un abrazo grande!`,
+                    'Coanfitrión': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás de Co-Anfitrión el ${fecha}.\n` +
+                        `Solo por recordatorio: tener presente llegar al menos 10 minutos antes, para poder preparar los equipos y probar micrófonos.\n` +
+                        `Queremos que la reunión salga lo mejor posible, para que los hermanos puedan disfrutarla y que sea de alabanza a Jehová.\n` +
+                        `¡Muchísimas gracias por tu buena disponibilidad!\n` +
+                        `Cuando te sea posible, confirmame la asignación.\n` +
+                        `¡Un abrazo grande!`,
 
-                        'Micrófono 1': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás como Micrófono 1 el ${fecha}.\n` +
-                            `¡Muchísimas gracias por tu buena disponibilidad!\n` +
-                            `Cuando te sea posible, confirmame la asignación.\n` +
-                            `¡Un abrazo grande!`,
+                    'Micrófono 1': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás como Micrófono 1 el ${fecha}.\n` +
+                        `¡Muchísimas gracias por tu buena disponibilidad!\n` +
+                        `Cuando te sea posible, confirmame la asignación.\n` +
+                        `¡Un abrazo grande!`,
 
-                        'Micrófono 2': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás como Micrófono 2 el ${fecha}.\n` +
-                            `¡Muchísimas gracias por tu buena disponibilidad!\n` +
-                            `Cuando te sea posible, confirmame la asignación.\n` +
-                            `¡Un abrazo grande!`,
+                    'Micrófono 2': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás como Micrófono 2 el ${fecha}.\n` +
+                        `¡Muchísimas gracias por tu buena disponibilidad!\n` +
+                        `Cuando te sea posible, confirmame la asignación.\n` +
+                        `¡Un abrazo grande!`,
 
-                        'Plataforma': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás como Plataforma el ${fecha}.\n` +
-                            `Solo por recordatorio: tener presente llegar al menos 10 minutos antes, para poder probar los micrófonos y la tablet.\n` +
-                            `Queremos que la reunión salga lo mejor posible, para que los hermanos puedan disfrutarla y que sea de alabanza a Jehová.\n` +
-                            `¡Muchísimas gracias por tu buena disponibilidad!\n` +
-                            `Cuando te sea posible, confirmame la asignación.\n` +
-                            `¡Un abrazo grande!`
-                    };
-                    const mensaje = mensajes[rol];
+                    'Plataforma': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás como Plataforma el ${fecha}.\n` +
+                        `Solo por recordatorio: tener presente llegar al menos 10 minutos antes, para poder probar los micrófonos y la tablet.\n` +
+                        `Queremos que la reunión salga lo mejor posible, para que los hermanos puedan disfrutarla y que sea de alabanza a Jehová.\n` +
+                        `¡Muchísimas gracias por tu buena disponibilidad!\n` +
+                        `Cuando te sea posible, confirmame la asignación.\n` +
+                        `¡Un abrazo grande!`
+                };
+                const mensaje = mensajes[rol];
 
-                    navigator.clipboard.writeText(mensaje)
-                        .then(() => {
-                            td.style.outline = '2px solid limegreen';
-                            setTimeout(() => td.style.outline = '', 1000);
-                        })
-                        .catch(err => {
-                            console.error('Error al copiar al portapapeles: ', err);
-                        });
-                });
+                navigator.clipboard.writeText(mensaje)
+                    .then(() => {
+                        td.style.outline = '2px solid limegreen';
+                        setTimeout(() => td.style.outline = '', 1000);
+                    })
+                    .catch(err => {
+                        console.error('Error al copiar al portapapeles: ', err);
+                    });
             });
+        });
 
         });
 
