@@ -252,7 +252,8 @@ app.delete('/personas/:nombre', async (req, res) => {
 app.put('/personas/:nombre', async (req, res) => {
     const nombre = req.params.nombre;
     const { color, roles, dias } = req.body;
-
+    console.log('Persona:', req.params.nombre); 
+    console.log('Body actualizar:', req.body); 
     try {
         const persona = await Persona.findOneAndUpdate(
             { nombre },
