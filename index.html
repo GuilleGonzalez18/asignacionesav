@@ -411,21 +411,26 @@
                 })
                 .join('');
         }
-        async function cargarPersonasDesdeBackend() {
+        async function cargarPersonas() {
             try {
-                const res = await fetch(`${BASE_URL}/personas`)
+                const res = await fetch(`${BASE_URL}/personas`);
                 const data = await res.json();
+
                 personas = {};
                 data.forEach(p => {
                     personas[p.nombre] = {
+                        nombre: p.nombre,
+                        color: p.color,
                         roles: p.roles,
-                        color: p.color || '#000000'
+                        dias: p.dias ? Object.fromEntries(Object.entries(p.dias)) : {}  // <-- esto es clave
                     };
                 });
+
+                console.log("✅ Personas cargadas con días:", personas); // Verificá esto
                 actualizarSelectPersonas();
                 actualizarSelectPersonasAEliminar();
             } catch (err) {
-                console.error("Error cargando personas:", err);
+                console.error('❌ Error cargando personas:', err);
             }
         }
         cargarPersonasDesdeBackend();
@@ -595,12 +600,17 @@
             document.getElementById('nombrePersona').value = nombre;
             document.getElementById('colorPersona').value = persona.color || '#000000';
             document.querySelectorAll('input[name="roles"]').forEach(cb => cb.checked = false);
+            document.querySelectorAll('input[type="radio"]').forEach(rb => rb.checked = false);
             persona.roles.forEach(rol => {
                 const checkbox = Array.from(document.querySelectorAll('input[name="roles"]'))
                     .find(cb => cb.value === rol);
                 if (checkbox) checkbox.checked = true;
+                const dia = persona.dias?.[rol] || "Ambos";
+                const radio = document.querySelector(`input[name="dia_${rol}"][value="${dia}"]`);
+                if (radio) radio.checked = true;
             });
         }
+
 
         function actualizarSelectPersonas() {
             const select = document.getElementById('personaNoDisponible');
@@ -1157,7 +1167,6 @@
             });
         });
 
-        });
 
 
         document.getElementById('vaciarEventos').addEventListener('click', async () => {
