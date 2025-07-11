@@ -43,6 +43,7 @@ const FechaEvento = mongoose.model('FechaEvento', fechaEventoSchema);
 
 // Endpoints
 app.get('/personas', async (req, res) => {
+  console.log('Personas cargadas:', req.body); // 
   const personas = await Persona.find();
   res.json(personas);
 });

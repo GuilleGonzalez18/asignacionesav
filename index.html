@@ -411,7 +411,7 @@
                 })
                 .join('');
         }
-        async function cargarPersonas() {
+        async function cargarPersonasDesdeBackend() {
             try {
                 const res = await fetch(`${BASE_URL}/personas`);
                 const data = await res.json();
@@ -433,6 +433,7 @@
                 console.error('❌ Error cargando personas:', err);
             }
         }
+
         cargarPersonasDesdeBackend();
         let noDisponibilidades = {};
 
