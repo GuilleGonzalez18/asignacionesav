@@ -857,60 +857,60 @@
             html += `</table>`;
             document.getElementById('asignaciones').innerHTML = html;
             agregarListenersCopiado();
+        }
 
-            function agregarListenersCopiado() {
-                document.querySelectorAll('#asignaciones td[data-persona]').forEach(td => {
-                    td.addEventListener('click', () => {
-                        const nombre = td.dataset.persona;
-                        const rol = td.dataset.rol;
-                        const fecha = td.dataset.fecha;
+        function agregarListenersCopiado() {
+            document.querySelectorAll('#asignaciones td[data-persona]').forEach(td => {
+                td.addEventListener('click', () => {
+                    const nombre = td.dataset.persona;
+                    const rol = td.dataset.rol;
+                    const fecha = td.dataset.fecha;
 
-                        const mensajes = {
-                            'Anfitrión': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás de Anfitrión el ${fecha}.\n` +
-                                `Solo por recordatorio: tener presente llegar al menos 10 minutos antes, para poder preparar los equipos.\n` +
-                                `Queremos que la reunión salga lo mejor posible, para que los hermanos puedan disfrutarla y que sea de alabanza a Jehová.\n` +
-                                `¡Muchísimas gracias por tu buena disponibilidad!\n` +
-                                `Cuando te sea posible, confirmame la asignación.\n` +
-                                `¡Un abrazo grande!`,
+                    const mensajes = {
+                        'Anfitrión': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás de Anfitrión el ${fecha}.\n` +
+                            `Solo por recordatorio: tener presente llegar al menos 10 minutos antes, para poder preparar los equipos.\n` +
+                            `Queremos que la reunión salga lo mejor posible, para que los hermanos puedan disfrutarla y que sea de alabanza a Jehová.\n` +
+                            `¡Muchísimas gracias por tu buena disponibilidad!\n` +
+                            `Cuando te sea posible, confirmame la asignación.\n` +
+                            `¡Un abrazo grande!`,
 
-                            'Coanfitrión': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás de Co-Anfitrión el ${fecha}.\n` +
-                                `Solo por recordatorio: tener presente llegar al menos 10 minutos antes, para poder preparar los equipos y probar micrófonos.\n` +
-                                `Queremos que la reunión salga lo mejor posible, para que los hermanos puedan disfrutarla y que sea de alabanza a Jehová.\n` +
-                                `¡Muchísimas gracias por tu buena disponibilidad!\n` +
-                                `Cuando te sea posible, confirmame la asignación.\n` +
-                                `¡Un abrazo grande!`,
+                        'Coanfitrión': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás de Co-Anfitrión el ${fecha}.\n` +
+                            `Solo por recordatorio: tener presente llegar al menos 10 minutos antes, para poder preparar los equipos y probar micrófonos.\n` +
+                            `Queremos que la reunión salga lo mejor posible, para que los hermanos puedan disfrutarla y que sea de alabanza a Jehová.\n` +
+                            `¡Muchísimas gracias por tu buena disponibilidad!\n` +
+                            `Cuando te sea posible, confirmame la asignación.\n` +
+                            `¡Un abrazo grande!`,
 
-                            'Micrófono 1': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás como Micrófono 1 el ${fecha}.\n` +
-                                `¡Muchísimas gracias por tu buena disponibilidad!\n` +
-                                `Cuando te sea posible, confirmame la asignación.\n` +
-                                `¡Un abrazo grande!`,
+                        'Micrófono 1': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás como Micrófono 1 el ${fecha}.\n` +
+                            `¡Muchísimas gracias por tu buena disponibilidad!\n` +
+                            `Cuando te sea posible, confirmame la asignación.\n` +
+                            `¡Un abrazo grande!`,
 
-                            'Micrófono 2': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás como Micrófono 2 el ${fecha}.\n` +
-                                `¡Muchísimas gracias por tu buena disponibilidad!\n` +
-                                `Cuando te sea posible, confirmame la asignación.\n` +
-                                `¡Un abrazo grande!`,
+                        'Micrófono 2': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás como Micrófono 2 el ${fecha}.\n` +
+                            `¡Muchísimas gracias por tu buena disponibilidad!\n` +
+                            `Cuando te sea posible, confirmame la asignación.\n` +
+                            `¡Un abrazo grande!`,
 
-                            'Plataforma': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás como Plataforma el ${fecha}.\n` +
-                                `Solo por recordatorio: tener presente llegar al menos 10 minutos antes, para poder probar los micrófonos y la tablet.\n` +
-                                `Queremos que la reunión salga lo mejor posible, para que los hermanos puedan disfrutarla y que sea de alabanza a Jehová.\n` +
-                                `¡Muchísimas gracias por tu buena disponibilidad!\n` +
-                                `Cuando te sea posible, confirmame la asignación.\n` +
-                                `¡Un abrazo grande!`
-                        };
+                        'Plataforma': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás como Plataforma el ${fecha}.\n` +
+                            `Solo por recordatorio: tener presente llegar al menos 10 minutos antes, para poder probar los micrófonos y la tablet.\n` +
+                            `Queremos que la reunión salga lo mejor posible, para que los hermanos puedan disfrutarla y que sea de alabanza a Jehová.\n` +
+                            `¡Muchísimas gracias por tu buena disponibilidad!\n` +
+                            `Cuando te sea posible, confirmame la asignación.\n` +
+                            `¡Un abrazo grande!`
+                    };
 
-                        const mensaje = mensajes[rol];
+                    const mensaje = mensajes[rol];
 
-                        navigator.clipboard.writeText(mensaje)
-                            .then(() => {
-                                td.style.outline = '2px solid limegreen';
-                                setTimeout(() => td.style.outline = '', 1000);
-                            })
-                            .catch(err => {
-                                console.error('Error al copiar al portapapeles: ', err);
-                            });
-                    });
+                    navigator.clipboard.writeText(mensaje)
+                        .then(() => {
+                            td.style.outline = '2px solid limegreen';
+                            setTimeout(() => td.style.outline = '', 1000);
+                        })
+                        .catch(err => {
+                            console.error('Error al copiar al portapapeles: ', err);
+                        });
                 });
-            }
+            });
         }
 
         fetch(`${BASE_URL}/asignaciones-generadas`)
