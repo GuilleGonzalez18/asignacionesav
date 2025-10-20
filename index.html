@@ -36,8 +36,20 @@
             justify-content: center;
         }
 
+        .asignaciones {
+            width: 100vw;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
         .container {
             max-width: 900px;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container-asignaciones {
             width: 100%;
             padding: 20px;
             box-sizing: border-box;
@@ -383,13 +395,17 @@
                 <button type="button" id="vaciarEventos">Vaciar Eventos</button>
             </div>
         </div>
-
+    </div>
+    <div class="container-asignaciones">
         <h2>Asignaciones</h2>
         <div class="card">
             <button id="generarAsignaciones">Generar Asignaciones</button>
-            <div id="asignaciones"></div>
+            <div id="asignaciones" style="clear: both; width: 100%; margin-top: 20px;">
+            </div>
         </div>
     </div>
+
+
 
     <script>
         const datosParaGuardar = [];
@@ -871,7 +887,7 @@
 
         function obtenerDiaYNumero(fechaStr) {
             const fecha = new Date(fechaStr);
-            const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+            const diasSemana = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
             const nombreDia = diasSemana[fecha.getUTCDay()];
             const numeroDia = fecha.getUTCDate();
             return `${nombreDia} ${numeroDia}`;
@@ -891,7 +907,14 @@
             const nombreMes = mesFecha.toLocaleString('es-ES', { month: 'long' });
             const nombreMesMayuscula = nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1);
 
-            let html = `<table><tr><th>${nombreMesMayuscula}</th><th>Anfitrión</th><th>Coanfitrión</th><th>Micrófono 1</th><th>Micrófono 2</th><th>Plataforma</th></tr>`;
+            let html = `<table><tr><th>${nombreMesMayuscula}</th><th>Anfitrión</th>
+                <th>Coanfitrión</th>
+                <th>Micrófono 1</th>
+                <th>Micrófono 2</th>
+                <th>Plataforma</th>
+                <th>Presidencia</th>
+                <th>Lectura Atalaya</th>
+                <th>Acomodador</th></tr></tr>`;
 
             data.forEach(item => {
                 const { fecha, asignaciones } = item;
@@ -1013,7 +1036,14 @@
             const nombreMesMayuscula = nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1);
 
 
-            let html = `<table><tr><th>${nombreMesMayuscula}</th><th>Anfitrión</th><th>Coanfitrión</th><th>Micrófono 1</th><th>Micrófono 2</th><th>Plataforma</th></tr>`;
+            let html = `<table style="width: 100%;"><tr><th>${nombreMesMayuscula}</th><th>Anfitrión</th>
+                <th>Coanfitrión</th>
+                <th>Micrófono 1</th>
+                <th>Micrófono 2</th>
+                <th>Plataforma</th>
+                <th>Presidencia</th>
+                <th>Lectura Atalaya</th>
+                <th>Acomodador</th></tr></tr>`;
 
             fechasEventos.forEach(fecha => {
                 let disponibles = Object.keys(personas)
@@ -1149,13 +1179,13 @@
                     }
                 });
 
-        historialAsignados.shift(); // Elimina el más antiguo
-        historialAsignados.push(new Set());
-        ['Anfitrión', 'Coanfitrión', 'Micrófono 1', 'Micrófono 2', 'Plataforma'].forEach(rol => {
-            if (asignacion[rol]) {
-                historialAsignados[1].add(asignacion[rol]);
-            }
-        });
+                historialAsignados.shift(); 
+                historialAsignados.push(new Set());
+                ['Anfitrión', 'Coanfitrión', 'Micrófono 1', 'Micrófono 2', 'Plataforma'].forEach(rol => {
+                    if (asignacion[rol]) {
+                        historialAsignados[1].add(asignacion[rol]);
+                    }
+                });
 
                 const diaNumero = obtenerDiaYNumero(fecha);
                 html += `<tr><td style="font-weight:bold">${diaNumero}</td>` +
