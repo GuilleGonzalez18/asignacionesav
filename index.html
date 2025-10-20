@@ -316,6 +316,24 @@
                 <fieldset>
                     <legend>Roles Permitidos:</legend>
                     <label>
+                        <input type="checkbox" name="roles" value="Acomodador"> Acomodador
+                        <label><input type="radio" name="dia_Acomodador" value="Jueves"> Jue</label>
+                        <label><input type="radio" name="dia_Acomodador" value="Domingo"> Dom</label>
+                        <label><input type="radio" name="dia_Acomodador" value="Ambos" checked> Ambos</label>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="roles" value="Lector Atalaya"> Lector Atalaya
+                    </label>
+                    <label>
+                        <input type="checkbox" name="roles" value="Presidencia"> Presidencia
+                    </label>
+                    <label>
+                        <input type="checkbox" name="roles" value="Acomodador"> Acomodador
+                        <label><input type="radio" name="dia_Acomodador" value="Jueves"> Jue</label>
+                        <label><input type="radio" name="dia_Acomodador" value="Domingo"> Dom</label>
+                        <label><input type="radio" name="dia_Acomodador" value="Ambos" checked> Ambos</label>
+                    </label>
+                    <label>
                         <input type="checkbox" name="roles" value="Anfitrión"> Anfitrión
                         <label><input type="radio" name="dia_Anfitrión" value="Jueves"> Jue</label>
                         <label><input type="radio" name="dia_Anfitrión" value="Domingo"> Dom</label>
@@ -956,7 +974,7 @@
                     const fecha = td.dataset.fecha;
 
                     const mensajes = {
-                        'Anfitrión': `Hola querido, ¿cómo estás?. Para avisarte que estás de Anfitrión el ${fecha}.\n` +
+                        'Anfitrión': `Hola ${nombre}, ¿cómo estás?. Para avisarte que estás de Anfitrión el ${fecha}.\n` +
                             `Solo por recordatorio: tener presente llegar al menos 10 minutos antes, para poder preparar los equipos.\n` +
                             `Queremos que la reunión salga lo mejor posible, para que los hermanos puedan disfrutarla y que sea de alabanza a Jehová.\n` +
                             `¡Muchísimas gracias por tu buena disponibilidad!\n` +
